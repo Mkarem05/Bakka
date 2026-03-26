@@ -20,7 +20,7 @@ const GLASS_BG = 'rgba(255,255,255,0.08)';
 const GLASS_BORDER = 'rgba(255,255,255,0.15)';
 const BACK_BTN_BG = 'rgba(255,255,255,0.1)';
 
-const GRADIENT_COLORS: [string, string, string] = ['#0E3D28', '#1A6B4A', '#0E3020'];
+const GRADIENT_COLORS: [string, string, string] = ['#1A3A2A', '#1A6B4A', '#1A2E22'];
 const GRADIENT_LOCATIONS: [number, number, number] = [0, 0.5, 1];
 
 const MONTHS = [

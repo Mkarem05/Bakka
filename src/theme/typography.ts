@@ -1,19 +1,21 @@
 export const fonts = {
-  regular: 'Montserrat_400Regular',
-  medium: 'Montserrat_500Medium',
-  semiBold: 'Montserrat_600SemiBold',
-  bold: 'Montserrat_700Bold',
-  extraBold: 'Montserrat_800ExtraBold',
+  regular: 'Nunito_400Regular',
+  medium: 'Nunito_500Medium',
+  semiBold: 'Nunito_600SemiBold',
+  bold: 'Nunito_700Bold',
+  extraBold: 'Nunito_800ExtraBold',
+  black: 'Nunito_900Black',
   arabic: 'Amiri_400Regular',
   arabicBold: 'Amiri_700Bold',
 };
 
 export const fontSize = {
-  xs: 12,
-  sm: 14,
-  base: 16,
-  lg: 18,
-  xl: 22,
-  '2xl': 28,
-  arabic: 26,
+  xs: 10,
+  sm: 13,
+  base: 15,
+  lg: 17,
+  xl: 20,
+  '2xl': 24,
+  '3xl': 28,
+  arabic: 22,
 };
