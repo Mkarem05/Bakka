@@ -3,34 +3,41 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
-  ScrollView,
   TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../../src/theme/colors';
 import { fonts, fontSize } from '../../src/theme/typography';
-import { spacing, radius } from '../../src/theme/spacing';
-import { Button } from '../../src/components/ui/Button';
 import { useProfileStore, Country } from '../../src/store/profileStore';
+
+const GOLD = '#C9A030';
+const WHITE = '#FFFFFF';
+const WHITE60 = 'rgba(255,255,255,0.6)';
+const GLASS_BG = 'rgba(255,255,255,0.08)';
+const GLASS_BORDER = 'rgba(255,255,255,0.15)';
+const BACK_BTN_BG = 'rgba(255,255,255,0.1)';
+
+const GRADIENT_COLORS: [string, string, string] = ['#0E3D28', '#1A6B4A', '#0E3020'];
+const GRADIENT_LOCATIONS: [number, number, number] = [0, 0.5, 1];
 
 const MONTHS = [
   'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
   'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
 ];
 
-const COUNTRIES: { value: Country; label: string }[] = [
-  { value: 'russia', label: 'Россия' },
-  { value: 'kazakhstan', label: 'Казахстан' },
-  { value: 'uzbekistan', label: 'Узбекистан' },
-  { value: 'tajikistan', label: 'Таджикистан' },
-  { value: 'kyrgyzstan', label: 'Кыргызстан' },
-  { value: 'other', label: 'Другая страна' },
+const COUNTRIES: { value: Country; label: string; flag: string }[] = [
+  { value: 'russia', label: 'Россия', flag: '🇷🇺' },
+  { value: 'kazakhstan', label: 'Казахстан', flag: '🇰🇿' },
+  { value: 'uzbekistan', label: 'Узбекистан', flag: '🇺🇿' },
+  { value: 'tajikistan', label: 'Таджикистан', flag: '🇹🇯' },
+  { value: 'kyrgyzstan', label: 'Кыргызстан', flag: '🇰🇬' },
+  { value: 'other', label: 'Другая', flag: '🌍' },
 ];
 
 const THIS_YEAR = new Date().getFullYear();
-const YEARS = [THIS_YEAR, THIS_YEAR + 1, THIS_YEAR + 2];
 
 export default function TripDateScreen() {
   const router = useRouter();
@@ -53,195 +60,275 @@ export default function TripDateScreen() {
     router.replace('/(tabs)');
   };
 
+  const decrementYear = () => {
+    if (year > THIS_YEAR) setYear(year - 1);
+  };
+
+  const incrementYear = () => {
+    if (year < THIS_YEAR + 3) setYear(year + 1);
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>Когда ваша поездка?</Text>
-        <Text style={styles.subtitle}>Укажите примерные сроки</Text>
+    <LinearGradient
+      colors={GRADIENT_COLORS}
+      locations={GRADIENT_LOCATIONS}
+      start={{ x: 0.2, y: 0 }}
+      end={{ x: 0.8, y: 1 }}
+      style={styles.gradient}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          {/* Back button */}
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="arrow-back" size={20} color={WHITE} />
+          </TouchableOpacity>
 
-        {/* Month selector */}
-        <Text style={styles.sectionLabel}>Месяц</Text>
-        <View style={styles.monthGrid}>
-          {MONTHS.map((m, i) => (
-            <TouchableOpacity
-              key={i}
-              style={[styles.monthBtn, month === i && styles.monthBtnSelected]}
-              onPress={() => setMonth(i)}
-            >
-              <Text style={[styles.monthText, month === i && styles.monthTextSelected]}>
-                {m}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+          <Text style={styles.title}>Когда ваша поездка?</Text>
+          <Text style={styles.subtitle}>Укажите примерные сроки</Text>
 
-        {/* Year selector */}
-        <Text style={styles.sectionLabel}>Год</Text>
-        <View style={styles.yearRow}>
-          {YEARS.map((y) => (
-            <TouchableOpacity
-              key={y}
-              style={[styles.yearBtn, year === y && styles.yearBtnSelected]}
-              onPress={() => setYear(y)}
-            >
-              <Text style={[styles.yearText, year === y && styles.yearTextSelected]}>
-                {y}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+          {/* Month selector */}
+          <Text style={styles.sectionLabel}>Месяц</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.chipRow}
+          >
+            {MONTHS.map((m, i) => (
+              <TouchableOpacity
+                key={i}
+                style={[styles.chip, month === i && styles.chipSelected]}
+                onPress={() => setMonth(i)}
+                activeOpacity={0.75}
+              >
+                <Text style={[styles.chipText, month === i && styles.chipTextSelected]}>
+                  {m}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
 
-        {/* Country */}
-        <Text style={styles.sectionLabel}>Ваша страна</Text>
-        <View style={styles.countryList}>
-          {COUNTRIES.map((c) => (
+          {/* Year selector */}
+          <Text style={styles.sectionLabel}>Год</Text>
+          <View style={styles.yearRow}>
             <TouchableOpacity
-              key={c.value}
-              style={[styles.countryItem, selectedCountry === c.value && styles.countryItemSelected]}
-              onPress={() => setSelectedCountry(c.value)}
+              style={[styles.yearArrow, year <= THIS_YEAR && styles.yearArrowDisabled]}
+              onPress={decrementYear}
               activeOpacity={0.7}
             >
-              <Text style={[styles.countryText, selectedCountry === c.value && styles.countryTextSelected]}>
-                {c.label}
-              </Text>
-              {selectedCountry === c.value && (
-                <Ionicons name="checkmark" size={18} color={colors.primary} />
-              )}
+              <Ionicons
+                name="remove"
+                size={22}
+                color={year <= THIS_YEAR ? 'rgba(255,255,255,0.25)' : WHITE}
+              />
             </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+            <View style={styles.yearDisplay}>
+              <Text style={styles.yearText}>{year}</Text>
+            </View>
+            <TouchableOpacity
+              style={[styles.yearArrow, year >= THIS_YEAR + 3 && styles.yearArrowDisabled]}
+              onPress={incrementYear}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name="add"
+                size={22}
+                color={year >= THIS_YEAR + 3 ? 'rgba(255,255,255,0.25)' : WHITE}
+              />
+            </TouchableOpacity>
+          </View>
 
-      <View style={styles.footer}>
-        <Button title="Готово" onPress={handleDone} style={styles.btn} />
-        <Button
-          title="Укажу позже"
-          onPress={handleSkip}
-          variant="ghost"
-          style={styles.btn}
-        />
-      </View>
-    </SafeAreaView>
+          {/* Country selector */}
+          <Text style={styles.sectionLabel}>Ваша страна</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.chipRow}
+          >
+            {COUNTRIES.map((c) => (
+              <TouchableOpacity
+                key={c.value}
+                style={[styles.chip, selectedCountry === c.value && styles.chipSelected]}
+                onPress={() => setSelectedCountry(c.value)}
+                activeOpacity={0.75}
+              >
+                <Text style={styles.chipFlag}>{c.flag}</Text>
+                <Text style={[styles.chipText, selectedCountry === c.value && styles.chipTextSelected]}>
+                  {c.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </ScrollView>
+
+        {/* Footer buttons */}
+        <View style={styles.footer}>
+          <TouchableOpacity
+            style={styles.skipButton}
+            onPress={handleSkip}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.skipText}>Пропустить</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.doneButton}
+            onPress={handleDone}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.doneText}>Готово</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  gradient: {
     flex: 1,
-    backgroundColor: colors.ivory,
+  },
+  safeArea: {
+    flex: 1,
   },
   content: {
-    paddingHorizontal: spacing['2xl'],
-    paddingTop: spacing['4xl'],
-    paddingBottom: spacing.lg,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 16,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: BACK_BTN_BG,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
   },
   title: {
-    fontFamily: fonts.bold,
-    fontSize: fontSize['2xl'],
-    color: colors.textPrimary,
-    marginBottom: spacing.sm,
+    fontFamily: fonts.extraBold,
+    fontSize: 26,
+    color: WHITE,
+    marginBottom: 8,
   },
   subtitle: {
     fontFamily: fonts.regular,
     fontSize: fontSize.sm,
-    color: colors.textSecondary,
-    marginBottom: spacing['3xl'],
+    color: WHITE60,
+    marginBottom: 28,
   },
   sectionLabel: {
     fontFamily: fonts.semiBold,
-    fontSize: fontSize.sm,
-    color: colors.textSecondary,
-    marginBottom: spacing.md,
-    marginTop: spacing.lg,
+    fontSize: 11,
+    color: WHITE60,
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: 1,
+    marginBottom: 10,
+    marginTop: 20,
   },
-  monthGrid: {
+
+  // Chips (months + countries)
+  chipRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
+    gap: 8,
+    paddingRight: 24,
   },
-  monthBtn: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.sm,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    minWidth: 90,
+  chip: {
+    flexDirection: 'row',
     alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 50,
+    backgroundColor: GLASS_BG,
+    borderWidth: 1,
+    borderColor: GLASS_BORDER,
+    gap: 5,
   },
-  monthBtnSelected: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+  chipSelected: {
+    backgroundColor: GOLD,
+    borderColor: GOLD,
   },
-  monthText: {
+  chipText: {
     fontFamily: fonts.medium,
-    fontSize: fontSize.sm,
-    color: colors.textPrimary,
+    fontSize: 14,
+    color: WHITE,
   },
-  monthTextSelected: {
-    color: colors.white,
+  chipTextSelected: {
+    color: WHITE,
+    fontFamily: fonts.semiBold,
   },
+  chipFlag: {
+    fontSize: 14,
+  },
+
+  // Year selector
   yearRow: {
     flexDirection: 'row',
-    gap: spacing.md,
+    alignItems: 'center',
+    gap: 16,
   },
-  yearBtn: {
-    flex: 1,
-    minHeight: 52,
-    borderRadius: radius.md,
-    backgroundColor: colors.surface,
-    borderWidth: 1.5,
-    borderColor: colors.border,
+  yearArrow: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: GLASS_BG,
+    borderWidth: 1,
+    borderColor: GLASS_BORDER,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  yearBtnSelected: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primaryLight,
+  yearArrowDisabled: {
+    opacity: 0.4,
+  },
+  yearDisplay: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: GLASS_BG,
+    borderWidth: 1,
+    borderColor: GLASS_BORDER,
+    borderRadius: 14,
+    height: 54,
   },
   yearText: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.base,
-    color: colors.textPrimary,
+    fontFamily: fonts.bold,
+    fontSize: 22,
+    color: WHITE,
   },
-  yearTextSelected: {
-    color: colors.primary,
-  },
-  countryList: {
-    gap: spacing.sm,
-  },
-  countryItem: {
+
+  // Footer
+  footer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    minHeight: 52,
+    gap: 12,
+    paddingHorizontal: 24,
+    paddingBottom: 28,
   },
-  countryItemSelected: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primaryLight,
+  skipButton: {
+    paddingVertical: 15,
+    paddingHorizontal: 12,
+    minHeight: 54,
+    justifyContent: 'center',
   },
-  countryText: {
+  skipText: {
     fontFamily: fonts.medium,
-    fontSize: fontSize.base,
-    color: colors.textPrimary,
+    fontSize: 15,
+    color: WHITE60,
   },
-  countryTextSelected: {
-    color: colors.primary,
+  doneButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: GOLD,
+    borderRadius: 50,
+    minHeight: 54,
+    paddingVertical: 15,
   },
-  footer: {
-    paddingHorizontal: spacing['2xl'],
-    paddingBottom: spacing['2xl'],
-    gap: spacing.sm,
-  },
-  btn: {
-    width: '100%',
+  doneText: {
+    fontFamily: fonts.bold,
+    fontSize: 16,
+    color: WHITE,
   },
 });

@@ -43,7 +43,8 @@
       "Bash(curl -s http://localhost:8082/status)",
       "Bash(powershell -Command \"Get-NetTCPConnection -LocalPort 8081,8082,8083,8084,8085 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_OwningProcess -Force -ErrorAction SilentlyContinue }; Write-Output ''All Metro ports cleared''\")",
       "Bash(powershell -Command \":*)",
-      "Bash(ls /c/Users/katem/Downloads/bakka/app/\\\\\\(tabs\\\\\\)/)"
+      "Bash(ls /c/Users/katem/Downloads/bakka/app/\\\\\\(tabs\\\\\\)/)",
+      "Bash(node -e \"const pkg = require\\(''./node_modules/expo-linear-gradient/package.json''\\); console.log\\(pkg.version\\);\")"
     ]
   }
 }
