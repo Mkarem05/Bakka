@@ -10,9 +10,8 @@ import {
   UIManager,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../../theme/colors';
 import { fonts, fontSize } from '../../theme/typography';
-import { radius, spacing } from '../../theme/spacing';
+import { spacing } from '../../theme/spacing';
 import { DuaBox } from './DuaBox';
 import type { UmrahStep } from '../../data/umrahSteps';
 
@@ -30,9 +29,15 @@ interface StepCardProps {
 }
 
 const BORDER_COLOR: Record<StepState, string> = {
-  done: colors.accent,
-  active: colors.primary,
-  future: colors.border,
+  done: 'rgba(26,107,74,0.2)',
+  active: 'rgba(26,107,74,0.3)',
+  future: '#F5EFE8',
+};
+
+const SHADOW_COLOR: Record<StepState, string> = {
+  done: 'rgba(26,107,74,0.15)',
+  active: 'rgba(26,107,74,0.15)',
+  future: 'transparent',
 };
 
 export function StepCard({ step, state, onMarkDone, onUnmark }: StepCardProps) {
@@ -58,24 +63,27 @@ export function StepCard({ step, state, onMarkDone, onUnmark }: StepCardProps) {
   const isDone = state === 'done';
 
   return (
-    <View style={[styles.card, { borderLeftColor: BORDER_COLOR[state] }]}>
+    <View style={[
+      styles.card,
+      { borderColor: BORDER_COLOR[state] },
+      state === 'active' && styles.cardActive,
+    ]}>
+      {/* Step number dot */}
+      <View style={[styles.numDot, isDone && styles.numDotDone, state === 'active' && styles.numDotActive]}>
+        {isDone
+          ? <Text style={styles.numDotText}>✓</Text>
+          : <Text style={styles.numDotText}>{step.id}</Text>
+        }
+      </View>
+
       {/* Header */}
       <TouchableOpacity style={styles.header} onPress={toggle} activeOpacity={0.7}>
         <View style={styles.headerLeft}>
-          <View style={[styles.numBadge, isDone && styles.numBadgeDone]}>
-            {isDone ? (
-              <Ionicons name="checkmark" size={14} color={colors.white} />
-            ) : (
-              <Text style={styles.numText}>{step.id}</Text>
-            )}
-          </View>
-          <View style={styles.titleBlock}>
-            <Text style={styles.stepName}>{step.name}</Text>
-            <Text style={styles.stepArabic}>{step.nameArabic}</Text>
-          </View>
+          <Text style={styles.stepName}>{step.name}</Text>
+          <Text style={styles.stepArabic}>{step.nameArabic}</Text>
         </View>
         <Animated.View style={{ transform: [{ rotate }] }}>
-          <Ionicons name="chevron-down" size={20} color={colors.textSecondary} />
+          <Ionicons name="chevron-down" size={18} color="#7D6B5A" />
         </Animated.View>
       </TouchableOpacity>
 
@@ -84,37 +92,26 @@ export function StepCard({ step, state, onMarkDone, onUnmark }: StepCardProps) {
         <View style={styles.body}>
           <Text style={styles.description}>{step.description}</Text>
 
-          <Text style={styles.sectionTitle}>Советы</Text>
-          {step.tips.map((tip, i) => (
-            <View key={i} style={styles.tipRow}>
-              <Ionicons
-                name="ellipse"
-                size={6}
-                color={colors.primary}
-                style={styles.tipDot}
-              />
-              <Text style={styles.tipText}>{tip}</Text>
-            </View>
-          ))}
+          <View style={styles.tipsBlock}>
+            {step.tips.map((tip, i) => (
+              <View key={i} style={styles.tipRow}>
+                <Text style={styles.tipArrow}>→</Text>
+                <Text style={styles.tipText}>{tip}</Text>
+              </View>
+            ))}
+          </View>
 
-          <Text style={styles.sectionTitle}>Дуа</Text>
           {step.duas.map((dua, i) => (
             <DuaBox key={i} dua={dua} />
           ))}
 
           <TouchableOpacity
-            style={[styles.doneBtn, isDone && styles.doneBtnActive]}
+            style={[styles.doneBtn, isDone && styles.doneBtnDone]}
             onPress={isDone ? onUnmark : onMarkDone}
             activeOpacity={0.8}
           >
-            <Ionicons
-              name={isDone ? 'checkmark-circle' : 'checkmark-circle-outline'}
-              size={20}
-              color={isDone ? colors.accent : colors.white}
-              style={{ marginRight: 8 }}
-            />
-            <Text style={[styles.doneBtnText, isDone && styles.doneBtnTextActive]}>
-              {isDone ? 'Выполнено' : 'Отметить выполненным'}
+            <Text style={[styles.doneBtnText, isDone && styles.doneBtnTextDone]}>
+              {isDone ? '✓ Выполнено' : 'Отметить выполненным'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -125,113 +122,136 @@ export function StepCard({ step, state, onMarkDone, onUnmark }: StepCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    borderLeftWidth: 4,
-    marginBottom: spacing.md,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#F5EFE8',
+    borderRadius: 12,
+    marginBottom: spacing.sm,
+    paddingLeft: 18,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
     elevation: 2,
-    overflow: 'hidden',
+    position: 'relative',
+  },
+  cardActive: {
+    shadowColor: 'rgba(26,107,74,0.15)',
+    shadowOpacity: 0.6,
+    shadowRadius: 16,
+    elevation: 4,
+  },
+  numDot: {
+    position: 'absolute',
+    left: -14,
+    top: 18,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#EEE8E0',
+    borderWidth: 2,
+    borderColor: 'rgba(44,24,16,0.09)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2,
+  },
+  numDotActive: {
+    backgroundColor: '#C9A030',
+    borderColor: '#C9A030',
+  },
+  numDotDone: {
+    backgroundColor: '#C9A030',
+    borderColor: '#C9A030',
+  },
+  numDotText: {
+    fontFamily: fonts.bold,
+    fontSize: 11,
+    color: '#FFFFFF',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: spacing.lg,
+    paddingLeft: spacing.md,
   },
   headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
     flex: 1,
-  },
-  numBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: spacing.md,
-  },
-  numBadgeDone: {
-    backgroundColor: colors.accent,
-  },
-  numText: {
-    fontFamily: fonts.bold,
-    fontSize: fontSize.sm,
-    color: colors.white,
-  },
-  titleBlock: {
-    flex: 1,
+    marginRight: spacing.sm,
   },
   stepName: {
     fontFamily: fonts.semiBold,
-    fontSize: fontSize.base,
-    color: colors.textPrimary,
+    fontSize: 19,
+    color: '#2C1810',
+    letterSpacing: -0.2,
   },
   stepArabic: {
     fontFamily: 'Amiri_400Regular',
-    fontSize: 16,
-    color: colors.accent,
+    fontSize: 15,
+    color: '#C9A030',
     marginTop: 2,
   },
   body: {
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.lg,
+    paddingLeft: spacing.md,
   },
   description: {
     fontFamily: fonts.regular,
     fontSize: fontSize.sm,
-    color: colors.textSecondary,
-    lineHeight: 22,
-    marginBottom: spacing.lg,
+    color: '#7D6B5A',
+    lineHeight: 26,
+    marginBottom: spacing.md,
   },
-  sectionTitle: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.sm,
-    color: colors.textPrimary,
-    marginBottom: spacing.sm,
-    marginTop: spacing.md,
+  tipsBlock: {
+    marginBottom: spacing.md,
   },
   tipRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(44,24,16,0.09)',
+    paddingVertical: 7,
   },
-  tipDot: {
-    marginTop: 7,
+  tipArrow: {
+    fontFamily: fonts.bold,
+    fontSize: 11,
+    color: '#C9A030',
     marginRight: spacing.sm,
+    marginTop: 2,
+    width: 12,
   },
   tipText: {
-    fontFamily: fonts.regular,
+    fontFamily: fonts.medium,
     fontSize: fontSize.sm,
-    color: colors.textSecondary,
+    color: '#2C1810',
     flex: 1,
     lineHeight: 20,
   },
   doneBtn: {
-    marginTop: spacing.lg,
+    marginTop: spacing.md,
     minHeight: 52,
-    borderRadius: radius.md,
-    backgroundColor: colors.primary,
-    flexDirection: 'row',
+    borderRadius: 14,
+    backgroundColor: '#C9A030',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: 'rgba(26,107,74,0.18)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    elevation: 4,
   },
-  doneBtnActive: {
-    backgroundColor: colors.accentLight,
-    borderWidth: 1.5,
-    borderColor: colors.accent,
+  doneBtnDone: {
+    backgroundColor: '#8a7010',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   doneBtnText: {
-    fontFamily: fonts.semiBold,
+    fontFamily: fonts.bold,
     fontSize: fontSize.base,
-    color: colors.white,
+    color: '#FDF8F3',
   },
-  doneBtnTextActive: {
-    color: colors.accent,
+  doneBtnTextDone: {
+    color: '#FDF8F3',
   },
 });
