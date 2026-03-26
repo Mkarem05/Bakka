@@ -52,8 +52,11 @@ export default function HomeScreen() {
   const tiles: QuickTile[] = [
     { icon: 'book-outline', label: 'Умра', href: '/(tabs)/guide' },
     { icon: 'moon-outline', label: 'Хадж', href: '/(tabs)/guide' },
+    { icon: 'business-outline', label: 'Масджид', href: '/(tabs)/masjid' },
+    { icon: 'swap-horizontal-outline', label: 'Конвертер', href: '/(tabs)/converter' },
+    { icon: 'map-outline', label: 'Места', href: '/(tabs)/ziyarat' },
     { icon: 'heart-outline', label: 'Дуа', href: '/(tabs)/dua' },
-    { icon: 'warning-outline', label: 'SOS', href: '/sos', accent: true },
+    { icon: 'warning-outline', label: 'SOS', href: '/sos', accent: true, wide: true },
   ];
 
   return (

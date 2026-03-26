@@ -46,32 +46,22 @@ export default function TabsLayout() {
           ),
         }}
       />
+      {/* SOS button uses checklist route slot, renders custom component */}
       <Tabs.Screen
         name="checklist"
         options={{
-          title: 'Чеклист',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="checkbox-outline" size={size} color={color} />
-          ),
+          title: '',
           tabBarButton: () => (
-            <>
-              <SOSTabButton onPress={() => router.push('/sos')} />
-              <TouchableOpacity
-                style={styles.checklistTabBtn}
-                onPress={() => router.push('/(tabs)/checklist')}
-              >
-                <Ionicons name="checkbox-outline" size={24} color={colors.textSecondary} />
-              </TouchableOpacity>
-            </>
+            <SOSTabButton onPress={() => router.push('/sos')} />
           ),
         }}
       />
       <Tabs.Screen
-        name="dua"
+        name="ziyarat"
         options={{
-          title: 'Дуа',
+          title: 'Места',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart-outline" size={size} color={color} />
+            <Ionicons name="map-outline" size={size} color={color} />
           ),
         }}
       />
@@ -82,6 +72,25 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="sparkles-outline" size={size} color={color} />
           ),
+        }}
+      />
+      {/* Hidden tabs — still navigable via router.push */}
+      <Tabs.Screen
+        name="dua"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="masjid"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="converter"
+        options={{
+          href: null,
         }}
       />
     </Tabs>
@@ -101,11 +110,10 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   sosWrap: {
-    position: 'absolute',
-    top: -14,
-    left: '50%',
-    marginLeft: -25,
-    zIndex: 10,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 6,
   },
   sosBtnInner: {
     width: 50,
@@ -114,16 +122,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.error,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: -14,
     shadowColor: colors.error,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.4,
     shadowRadius: 6,
     elevation: 6,
-  },
-  checklistTabBtn: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 8,
   },
 });
