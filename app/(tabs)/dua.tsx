@@ -11,6 +11,7 @@ import {
   UIManager,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../src/theme/colors';
 import { fonts, fontSize } from '../../src/theme/typography';
@@ -50,22 +51,35 @@ export default function DuaScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.tabs}
         >
-          {CATEGORIES.map((cat) => (
-            <TouchableOpacity
-              key={cat.value}
-              style={[styles.tabChip, activeCategory === cat.value && styles.tabChipActive]}
-              onPress={() => {
-                setActiveCategory(cat.value);
-                setExpanded(null);
-              }}
-            >
-              <Text
-                style={[styles.tabText, activeCategory === cat.value && styles.tabTextActive]}
+          {CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat.value;
+            return (
+              <TouchableOpacity
+                key={cat.value}
+                style={styles.tabChip}
+                onPress={() => {
+                  setActiveCategory(cat.value);
+                  setExpanded(null);
+                }}
+                activeOpacity={0.8}
               >
-                {cat.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                {isActive ? (
+                  <LinearGradient
+                    colors={['#C9A030', '#E8C050']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.tabChipGrad}
+                  >
+                    <Text style={[styles.tabText, styles.tabTextActive]}>{cat.label}</Text>
+                  </LinearGradient>
+                ) : (
+                  <View style={styles.tabChipInner}>
+                    <Text style={styles.tabText}>{cat.label}</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
       </View>
 
@@ -122,22 +136,33 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.sm,
   },
   tabChip: {
+    borderRadius: 4,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  tabChipGrad: {
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
-    borderRadius: radius.full,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
     minHeight: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabChipActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+  tabChipInner: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    minHeight: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   tabText: {
-    fontFamily: fonts.medium,
+    fontFamily: fonts.semiBold,
     fontSize: fontSize.sm,
     color: colors.textSecondary,
   },

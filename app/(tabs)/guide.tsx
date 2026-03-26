@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../../src/theme/colors';
 import { fonts, fontSize } from '../../src/theme/typography';
 import { spacing, radius } from '../../src/theme/spacing';
@@ -55,10 +56,14 @@ export default function GuideScreen() {
     return prevDone ? 'active' as const : 'future' as const;
   };
 
+  const heroGrad = tab === 'umrah'
+    ? (['#0E3D28', '#1A6B4A'] as [string, string])
+    : (['#C9922A', '#E8B84A'] as [string, string]);
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Segment control */}
-      <View style={styles.header}>
+      {/* Gradient header */}
+      <LinearGradient colors={heroGrad} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.header}>
         <Text style={styles.screenTitle}>Гид паломника</Text>
         <View style={styles.segmentRow}>
           {(['umrah', 'hajj'] as Tab[]).map((t) => (
@@ -104,7 +109,7 @@ export default function GuideScreen() {
             </View>
           </ScrollView>
         )}
-      </View>
+      </LinearGradient>
 
       {/* Steps */}
       {tab === 'umrah' ? (
@@ -143,20 +148,19 @@ export default function GuideScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.ivory },
   header: {
-    backgroundColor: colors.ivory,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
-    paddingBottom: spacing.sm,
+    paddingBottom: spacing.md,
   },
   screenTitle: {
     fontFamily: fonts.bold,
     fontSize: fontSize.xl,
-    color: colors.textPrimary,
+    color: '#FFFFFF',
     marginBottom: spacing.lg,
   },
   segmentRow: {
     flexDirection: 'row',
-    backgroundColor: colors.border,
+    backgroundColor: 'rgba(0,0,0,0.2)',
     borderRadius: radius.md,
     padding: 3,
     marginBottom: spacing.md,
@@ -168,20 +172,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   segBtnActive: {
-    backgroundColor: colors.white,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2,
-    elevation: 1,
+    backgroundColor: 'rgba(255,255,255,0.2)',
   },
   segText: {
     fontFamily: fonts.medium,
     fontSize: fontSize.sm,
-    color: colors.textSecondary,
+    color: 'rgba(255,255,255,0.6)',
   },
   segTextActive: {
-    color: colors.primary,
+    color: '#FFFFFF',
     fontFamily: fonts.semiBold,
   },
   progressRow: {
@@ -193,7 +192,7 @@ const styles = StyleSheet.create({
   progressText: {
     fontFamily: fonts.medium,
     fontSize: fontSize.xs,
-    color: colors.textMuted,
+    color: 'rgba(255,255,255,0.6)',
     minWidth: 36,
   },
   filterScroll: { marginBottom: spacing.sm },
@@ -206,22 +205,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radius.full,
-    backgroundColor: colors.surface,
+    backgroundColor: 'rgba(255,255,255,0.1)',
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: 'rgba(255,255,255,0.2)',
     minHeight: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
   filterChipActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderColor: 'rgba(255,255,255,0.5)',
   },
   filterText: {
     fontFamily: fonts.medium,
     fontSize: fontSize.sm,
-    color: colors.textSecondary,
+    color: 'rgba(255,255,255,0.7)',
   },
-  filterTextActive: { color: colors.white },
+  filterTextActive: { color: '#FFFFFF' },
   list: { padding: spacing.lg, paddingBottom: spacing['4xl'] },
 });
