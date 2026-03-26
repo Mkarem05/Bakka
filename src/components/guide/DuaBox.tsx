@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../../theme/colors';
 import { fonts, fontSize } from '../../theme/typography';
 import { radius, spacing } from '../../theme/spacing';
 import { showToast } from '../ui/Toast';
@@ -27,7 +26,7 @@ export function DuaBox({ dua }: DuaBoxProps) {
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           style={styles.copyBtn}
         >
-          <Ionicons name="copy-outline" size={20} color={colors.primary} />
+          <Ionicons name="copy-outline" size={18} color="#1A6B4A" />
         </TouchableOpacity>
       </View>
 
@@ -40,8 +39,10 @@ export function DuaBox({ dua }: DuaBoxProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.primaryLight,
-    borderRadius: radius.md,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: 'rgba(30,122,82,0.2)',
+    borderRadius: 14,
     padding: spacing.lg,
     marginTop: spacing.sm,
   },
@@ -49,12 +50,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: spacing.sm,
+    marginBottom: 10,
   },
   name: {
     fontFamily: fonts.bold,
-    fontSize: 13,
-    color: colors.primary,
+    fontSize: 10,
+    color: '#1A6B4A',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
     flex: 1,
   },
   copyBtn: {
@@ -62,24 +65,23 @@ const styles = StyleSheet.create({
   },
   arabic: {
     fontFamily: 'Amiri_400Regular',
-    fontSize: 26,
-    color: colors.accent,
+    fontSize: 22,
+    color: '#1A6B4A',
     textAlign: 'right',
     writingDirection: 'rtl',
-    lineHeight: 44,
+    lineHeight: 40,
     marginBottom: spacing.sm,
   },
   transliteration: {
     fontFamily: fonts.regular,
     fontSize: fontSize.xs,
-    color: colors.textSecondary,
-    fontStyle: 'italic',
-    marginBottom: spacing.xs,
+    color: '#7D6B5A',
+    marginBottom: 6,
   },
   translation: {
-    fontFamily: fonts.regular,
-    fontSize: fontSize.sm,
-    color: colors.dark,
-    lineHeight: 20,
+    fontFamily: fonts.bold,
+    fontSize: fontSize.base,
+    color: '#2C1810',
+    lineHeight: 22,
   },
 });

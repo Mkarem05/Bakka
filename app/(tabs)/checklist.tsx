@@ -6,9 +6,9 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
-  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../src/theme/colors';
 import { fonts, fontSize } from '../../src/theme/typography';
@@ -34,12 +34,17 @@ export default function ChecklistScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+      <LinearGradient
+        colors={['#0E3D28', '#1A6B4A']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
         <Text style={styles.screenTitle}>Подготовка к поездке</Text>
         <View style={styles.progressRow}>
           <ProgressBar progress={progress} />
           <Text style={styles.progressText}>
-            Готово: {completed.length} из {total}
+            {completed.length} / {total}
           </Text>
         </View>
 
@@ -57,7 +62,7 @@ export default function ChecklistScreen() {
               <Ionicons
                 name={CATEGORY_ICONS[cat] as any}
                 size={16}
-                color={activeCategory === cat ? colors.white : colors.textSecondary}
+                color={activeCategory === cat ? '#2C1810' : 'rgba(255,255,255,0.7)'}
               />
               <Text style={[styles.tabText, activeCategory === cat && styles.tabTextActive]}>
                 {CATEGORY_LABELS[cat]}
@@ -65,7 +70,7 @@ export default function ChecklistScreen() {
             </TouchableOpacity>
           ))}
         </ScrollView>
-      </View>
+      </LinearGradient>
 
       <FlatList
         data={filtered}
@@ -98,13 +103,12 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
-    paddingBottom: spacing.sm,
-    backgroundColor: colors.ivory,
+    paddingBottom: spacing.md,
   },
   screenTitle: {
     fontFamily: fonts.bold,
     fontSize: fontSize.xl,
-    color: colors.textPrimary,
+    color: '#FFFFFF',
     marginBottom: spacing.lg,
   },
   progressRow: {
@@ -116,8 +120,8 @@ const styles = StyleSheet.create({
   progressText: {
     fontFamily: fonts.medium,
     fontSize: fontSize.xs,
-    color: colors.textMuted,
-    minWidth: 90,
+    color: 'rgba(255,255,255,0.7)',
+    minWidth: 50,
   },
   tabs: {
     gap: spacing.sm,
@@ -130,21 +134,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radius.full,
-    backgroundColor: colors.surface,
+    backgroundColor: 'rgba(255,255,255,0.1)',
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: 'rgba(255,255,255,0.2)',
     minHeight: 36,
   },
   tabChipActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    backgroundColor: '#C9A030',
+    borderColor: '#C9A030',
   },
   tabText: {
     fontFamily: fonts.medium,
     fontSize: fontSize.sm,
-    color: colors.textSecondary,
+    color: 'rgba(255,255,255,0.7)',
   },
-  tabTextActive: { color: colors.white },
+  tabTextActive: { color: '#2C1810' },
   list: {
     padding: spacing.lg,
     paddingBottom: spacing['4xl'],

@@ -5,9 +5,10 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Clipboard,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../src/theme/colors';
 import { fonts, fontSize } from '../../src/theme/typography';
@@ -42,7 +43,7 @@ function PlaceCard({ place, expanded, onToggle }: PlaceCardProps) {
   const tagStyle = TAG_COLORS[place.tag] ?? TAG_COLORS.opt;
 
   const handleCopyArabic = () => {
-    Clipboard.setString(place.dua.ar);
+    Clipboard.setStringAsync(place.dua.ar);
   };
 
   return (
@@ -156,7 +157,12 @@ export default function ZiyaratScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* City tabs */}
-      <View style={styles.cityTabBar}>
+      <LinearGradient
+        colors={['#5A3A7A', '#7A4A9A']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.cityTabBar}
+      >
         {CITIES.map((c) => (
           <TouchableOpacity
             key={c.key}
@@ -167,14 +173,14 @@ export default function ZiyaratScreen() {
             <Ionicons
               name={c.icon}
               size={16}
-              color={city === c.key ? colors.white : colors.textSecondary}
+              color={city === c.key ? '#FFFFFF' : 'rgba(255,255,255,0.55)'}
             />
             <Text style={[styles.cityTabText, city === c.key && styles.cityTabTextActive]}>
               {c.label}
             </Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </LinearGradient>
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* City intro card */}
@@ -238,8 +244,8 @@ const styles = StyleSheet.create({
   },
   cityTabBar: {
     flexDirection: 'row',
-    backgroundColor: colors.primary,
     paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
     paddingBottom: spacing.md,
     gap: spacing.sm,
   },
@@ -253,7 +259,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
   },
   cityTabActive: {
-    backgroundColor: colors.primaryDark,
+    backgroundColor: 'rgba(255,255,255,0.2)',
   },
   cityTabText: {
     fontFamily: fonts.semiBold,

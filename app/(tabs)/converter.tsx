@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../src/theme/colors';
 import { fonts, fontSize } from '../../src/theme/typography';
@@ -143,22 +144,27 @@ export default function ConverterScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
-      <View style={styles.header}>
+      <LinearGradient
+        colors={['#C9922A', '#E8B84A']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
         <View style={styles.headerIcon}>
-          <Ionicons name="swap-horizontal-outline" size={22} color={colors.white} />
+          <Ionicons name="swap-horizontal-outline" size={22} color="#FFFFFF" />
         </View>
         <View>
           <Text style={styles.headerTitle}>Конвертер валют</Text>
           <Text style={styles.headerSub}>SAR → СНГ</Text>
         </View>
-        {loading && <ActivityIndicator color={colors.white} style={{ marginLeft: 'auto' }} />}
+        {loading && <ActivityIndicator color="#FFFFFF" style={{ marginLeft: 'auto' }} />}
         {fetchError && !loading && (
           <View style={styles.offlineBadge}>
-            <Ionicons name="cloud-offline-outline" size={12} color={colors.white} />
+            <Ionicons name="cloud-offline-outline" size={12} color="#FFFFFF" />
             <Text style={styles.offlineBadgeText}>Офлайн</Text>
           </View>
         )}
-      </View>
+      </LinearGradient>
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Currency selector */}
@@ -303,7 +309,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    backgroundColor: colors.primary,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.lg,
   },
@@ -311,19 +316,19 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: radius.md,
-    backgroundColor: colors.primaryDark,
+    backgroundColor: 'rgba(0,0,0,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: fonts.bold,
     fontSize: fontSize.lg,
-    color: colors.white,
+    color: '#FFFFFF',
   },
   headerSub: {
     fontFamily: fonts.regular,
     fontSize: fontSize.xs,
-    color: colors.primaryLight,
+    color: 'rgba(255,255,255,0.7)',
     marginTop: 2,
   },
   offlineBadge: {

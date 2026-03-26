@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   fill: {
     height: '100%',
-    backgroundColor: colors.primary,
+    backgroundColor: '#C9A030',
     borderRadius: radius.full,
   },
 });

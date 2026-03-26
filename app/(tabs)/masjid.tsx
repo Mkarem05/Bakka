@@ -5,9 +5,10 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Clipboard,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../src/theme/colors';
 import { fonts, fontSize } from '../../src/theme/typography';
@@ -41,7 +42,7 @@ interface PlaceCardProps {
 
 function PlaceCard({ place, expanded, onToggle }: PlaceCardProps) {
   const handleCopyArabic = () => {
-    Clipboard.setString(place.ar);
+    Clipboard.setStringAsync(place.ar);
   };
 
   return (
@@ -134,7 +135,12 @@ export default function MasjidScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
-      <View style={styles.header}>
+      <LinearGradient
+        colors={['#0E3D28', '#1A6B4A']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
         <View style={styles.headerIcon}>
           <Ionicons name="business-outline" size={22} color={colors.white} />
         </View>
@@ -142,7 +148,7 @@ export default function MasjidScreen() {
           <Text style={styles.headerTitle}>Масджид аль-Харам</Text>
           <Text style={styles.headerSub}>Навигация по мечети</Text>
         </View>
-      </View>
+      </LinearGradient>
 
       {/* Category filters */}
       <ScrollView
@@ -204,7 +210,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    backgroundColor: colors.primary,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.lg,
   },
@@ -212,19 +217,19 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: radius.md,
-    backgroundColor: colors.primaryDark,
+    backgroundColor: 'rgba(0,0,0,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: fonts.bold,
     fontSize: fontSize.lg,
-    color: colors.white,
+    color: '#FFFFFF',
   },
   headerSub: {
     fontFamily: fonts.regular,
     fontSize: fontSize.xs,
-    color: colors.primaryLight,
+    color: 'rgba(255,255,255,0.6)',
     marginTop: 2,
   },
   catScroll: {

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../src/theme/colors';
 import { fonts, fontSize } from '../../src/theme/typography';
@@ -53,10 +54,15 @@ export default function AIScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.headerBar}>
+      <LinearGradient
+        colors={['#5A3A7A', '#7A4A9A']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.headerBar}
+      >
         <Text style={styles.screenTitle}>Bakka AI</Text>
         <Text style={styles.screenSubtitle}>Помощник паломника</Text>
-      </View>
+      </LinearGradient>
 
       <KeyboardAvoidingView
         style={styles.flex}
@@ -65,11 +71,13 @@ export default function AIScreen() {
       >
         {isEmpty ? (
           <View style={styles.emptyState}>
-            <Ionicons name="chatbubble-ellipses-outline" size={60} color={colors.border} />
-            <Text style={styles.emptyTitle}>Bakka AI — Помощник паломника</Text>
-            <Text style={styles.emptySubtitle}>
-              Задайте любой вопрос об Умре, Хадже или обрядах
-            </Text>
+            <View style={styles.welcomeCard}>
+              <Text style={styles.welcomeIcon}>🕌</Text>
+              <Text style={styles.emptyTitle}>Bakka AI — Помощник паломника</Text>
+              <Text style={styles.emptySubtitle}>
+                Задайте любой вопрос об Умре, Хадже или обрядах
+              </Text>
+            </View>
             <View style={styles.suggestions}>
               {SUGGESTIONS.map((s) => (
                 <TouchableOpacity
@@ -79,7 +87,7 @@ export default function AIScreen() {
                   activeOpacity={0.7}
                 >
                   <Text style={styles.suggestionText}>{s}</Text>
-                  <Ionicons name="arrow-forward-outline" size={16} color={colors.primary} />
+                  <Ionicons name="arrow-forward-outline" size={16} color="#5A3A7A" />
                 </TouchableOpacity>
               ))}
             </View>
@@ -103,25 +111,22 @@ export default function AIScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.ivory },
+  container: { flex: 1, backgroundColor: '#FDF8F3' },
   flex: { flex: 1 },
   headerBar: {
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
     paddingBottom: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    backgroundColor: colors.ivory,
   },
   screenTitle: {
     fontFamily: fonts.bold,
     fontSize: fontSize.xl,
-    color: colors.textPrimary,
+    color: '#FFFFFF',
   },
   screenSubtitle: {
     fontFamily: fonts.regular,
     fontSize: fontSize.sm,
-    color: colors.textSecondary,
+    color: 'rgba(255,255,255,0.6)',
   },
   emptyState: {
     flex: 1,
@@ -130,16 +135,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing['2xl'],
     gap: spacing.md,
   },
+  welcomeCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: 'rgba(90,58,122,0.15)',
+    borderRadius: 20,
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  welcomeIcon: {
+    fontSize: 44,
+    marginBottom: 12,
+  },
   emptyTitle: {
     fontFamily: fonts.bold,
     fontSize: fontSize.lg,
-    color: colors.textPrimary,
+    color: '#2C1810',
     textAlign: 'center',
+    marginBottom: 8,
   },
   emptySubtitle: {
     fontFamily: fonts.regular,
     fontSize: fontSize.sm,
-    color: colors.textSecondary,
+    color: '#7D6B5A',
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -152,17 +176,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
     padding: spacing.lg,
     minHeight: 52,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: '#F5EFE8',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 1,
   },
   suggestionText: {
-    fontFamily: fonts.medium,
+    fontFamily: fonts.semiBold,
     fontSize: fontSize.sm,
-    color: colors.textPrimary,
+    color: '#2C1810',
     flex: 1,
     marginRight: spacing.sm,
   },
