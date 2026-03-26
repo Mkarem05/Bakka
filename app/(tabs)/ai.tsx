@@ -1,0 +1,173 @@
+import React, { useRef, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { colors } from '../../src/theme/colors';
+import { fonts, fontSize } from '../../src/theme/typography';
+import { spacing, radius } from '../../src/theme/spacing';
+import { ChatBubble, TypingIndicator } from '../../src/components/chat/ChatBubble';
+import { ChatInput } from '../../src/components/chat/ChatInput';
+import { useChatStore } from '../../src/store/chatStore';
+import { chatService } from '../../src/services/chatService';
+import { showToast } from '../../src/components/ui/Toast';
+
+const SUGGESTIONS = [
+  'Что нельзя делать в ихраме?',
+  'Как правильно делать таваф?',
+  'Что взять в Умру?',
+  'Что делать если я потерялся?',
+];
+
+export default function AIScreen() {
+  const { messages, addMessage } = useChatStore();
+  const [typing, setTyping] = useState(false);
+  const listRef = useRef<FlatList>(null);
+
+  const handleSend = async (text: string) => {
+    const userMsg = { role: 'user' as const, content: text };
+    addMessage(userMsg);
+    setTyping(true);
+
+    setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 100);
+
+    try {
+      const reply = await chatService.sendMessage([...messages, userMsg]);
+      addMessage({ role: 'assistant', content: reply });
+    } catch {
+      showToast('Нет соединения. Проверьте интернет.', 'error');
+    } finally {
+      setTyping(false);
+      setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 100);
+    }
+  };
+
+  const isEmpty = messages.length === 0;
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.headerBar}>
+        <Text style={styles.screenTitle}>Bakka AI</Text>
+        <Text style={styles.screenSubtitle}>Помощник паломника</Text>
+      </View>
+
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={60}
+      >
+        {isEmpty ? (
+          <View style={styles.emptyState}>
+            <Ionicons name="chatbubble-ellipses-outline" size={60} color={colors.border} />
+            <Text style={styles.emptyTitle}>Bakka AI — Помощник паломника</Text>
+            <Text style={styles.emptySubtitle}>
+              Задайте любой вопрос об Умре, Хадже или обрядах
+            </Text>
+            <View style={styles.suggestions}>
+              {SUGGESTIONS.map((s) => (
+                <TouchableOpacity
+                  key={s}
+                  style={styles.suggestionBtn}
+                  onPress={() => handleSend(s)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.suggestionText}>{s}</Text>
+                  <Ionicons name="arrow-forward-outline" size={16} color={colors.primary} />
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        ) : (
+          <FlatList
+            ref={listRef}
+            data={messages}
+            keyExtractor={(_, i) => String(i)}
+            contentContainerStyle={styles.messageList}
+            onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: false })}
+            ListFooterComponent={typing ? <TypingIndicator /> : null}
+            renderItem={({ item }) => <ChatBubble message={item} />}
+          />
+        )}
+
+        <ChatInput onSend={handleSend} disabled={typing} />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.ivory },
+  flex: { flex: 1 },
+  headerBar: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    backgroundColor: colors.ivory,
+  },
+  screenTitle: {
+    fontFamily: fonts.bold,
+    fontSize: fontSize.xl,
+    color: colors.textPrimary,
+  },
+  screenSubtitle: {
+    fontFamily: fonts.regular,
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+  },
+  emptyState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing['2xl'],
+    gap: spacing.md,
+  },
+  emptyTitle: {
+    fontFamily: fonts.bold,
+    fontSize: fontSize.lg,
+    color: colors.textPrimary,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    fontFamily: fonts.regular,
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  suggestions: {
+    width: '100%',
+    gap: spacing.sm,
+    marginTop: spacing.lg,
+  },
+  suggestionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    padding: spacing.lg,
+    minHeight: 52,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  suggestionText: {
+    fontFamily: fonts.medium,
+    fontSize: fontSize.sm,
+    color: colors.textPrimary,
+    flex: 1,
+    marginRight: spacing.sm,
+  },
+  messageList: {
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.lg,
+  },
+});

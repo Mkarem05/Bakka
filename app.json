@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Bakka",
+    "slug": "bakka",
+    "scheme": "bakka",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "backgroundColor": "#0C6B59",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "bundleIdentifier": "app.bakka.pilgrim",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "app.bakka.pilgrim",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png",
+        "backgroundColor": "#0C6B59"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      ["expo-notifications", { "color": "#0C6B59" }]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
